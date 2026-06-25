@@ -1,0 +1,40 @@
+---
+import SectionHeading from '~/components/ui/SectionHeading.astro';
+import Icon from '~/components/ui/Icon.astro';
+import Chip from '~/components/ui/Chip.astro';
+import { skills } from '~/data/skills';
+---
+<section id="skills">
+  <div class="container">
+    <SectionHeading index="02" label="skills">The <span class="b">stack</span> I run.</SectionHeading>
+
+    <div class="skills__grid">
+      {skills.map((g) => (
+        <div class="skill reveal" data-glow>
+          <h3><Icon name={g.icon} size={1.05} /> {g.category}</h3>
+          <div class="chips">
+            {g.items.map((it) => <Chip label={it} />)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills__grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  }
+  .skill { padding: var(--space-3); background: var(--bg-2); position: relative; overflow: hidden; transition: background .35s; }
+  .skill::before {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .35s;
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(77,184,255,.1), transparent 60%);
+  }
+  .skill:hover { background: var(--surface); }
+  .skill:hover::before { opacity: 1; }
+  .skill h3 { font-family: var(--mono); font-size: var(--s0); margin-bottom: var(--space-2); color: var(--text);
+    display: flex; gap: .5rem; align-items: center; position: relative; text-transform: lowercase; }
+  .skill h3 :global(.ico-svg) { color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; position: relative; }
+</style>

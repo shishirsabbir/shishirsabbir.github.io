@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shishir Sabbir — Full-Stack Developer (Kinetic)</title>
+<meta name="description" content="Full-stack developer specializing in web automation, scraping, Shopify, and self-hosted platforms." />
+<style>
+/* ============================================================
+   KINETIC — bold editorial / Swiss brutalist, oversized type
+   ============================================================ */
+@layer reset, tokens, base, components;
+
+@layer reset{
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  img{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+  ul{ list-style:none; }
+}
+
+@layer tokens{
+  :root{
+    --paper:#f3efe7; --ink:#0e0e0c; --ink-2:#3a382f; --accent:#2e7dc4; --accent-2:#7cc0ff; --line:#0e0e0c;
+    --maxw:78rem; --gutter:clamp(1.2rem,5vw,4rem);
+    --section-y:clamp(4rem,12vh,10rem);
+    --d0:clamp(1rem,.95rem + .3vw,1.15rem);
+    --d1:clamp(1.4rem,1.1rem + 1vw,1.9rem);
+    --d2:clamp(2.4rem,1.5rem + 4vw,4.5rem);
+    --d3:clamp(3.5rem,1.5rem + 9vw,9rem);
+    --huge:clamp(4rem,1rem + 16vw,16rem);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+}
+
+@layer base{
+  body{ font-family:var(--sans); font-size:var(--d0); line-height:1.55; color:var(--ink); background:var(--paper);
+    overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3{ line-height:.92; letter-spacing:-.04em; font-weight:900; text-transform:uppercase; }
+  .container{ width:min(var(--maxw),100% - 2*var(--gutter)); margin-inline:auto; }
+  section{ padding-block:var(--section-y); position:relative; }
+  ::selection{ background:var(--accent); color:var(--paper); }
+}
+
+/* subtle paper grain */
+.grain{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.05; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* cursor */
+.cursor{ position:fixed; width:14px; height:14px; background:var(--accent); border-radius:50%; translate:-50% -50%;
+  z-index:9999; pointer-events:none; mix-blend-mode:difference; transition:width .25s,height .25s; }
+.cursor.grow{ width:60px; height:60px; }
+@media (hover:none),(pointer:coarse){ .cursor{ display:none; } }
+
+@layer components{
+  .nav{ position:fixed; inset:0 0 auto 0; z-index:100; display:flex; align-items:center; justify-content:space-between;
+    padding:1.1rem var(--gutter); mix-blend-mode:difference; color:#fff; }
+  .nav__brand{ font-family:var(--mono); font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.05em; }
+  .nav__links{ display:flex; gap:1.4rem; font-family:var(--mono); font-size:.8rem; text-transform:uppercase; }
+  .nav__links a{ position:relative; }
+  .nav__links a::after{ content:""; position:absolute; left:0; bottom:-3px; width:100%; height:2px; background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform .35s var(--ease); }
+  .nav__links a:hover::after{ transform:scaleX(1); transform-origin:left; }
+  @media(max-width:760px){ .nav__links{ display:none; } }
+
+  .btn{ display:inline-flex; align-items:center; gap:.6rem; padding:1rem 1.8rem; font-family:var(--mono);
+    font-size:.85rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; border:2px solid var(--ink);
+    position:relative; overflow:hidden; transition:color .3s; }
+  .btn span{ position:relative; z-index:1; }
+  .btn::before{ content:""; position:absolute; inset:0; background:var(--ink); transform:translateY(101%); transition:transform .4s var(--ease); z-index:0; }
+  .btn:hover{ color:var(--paper); } .btn:hover::before{ transform:translateY(0); }
+  .btn--fill{ background:var(--ink); color:var(--paper); }
+  .btn--fill::before{ background:var(--accent); }
+  .btn--fill:hover{ color:#fff; }
+
+  .eyebrow{ font-family:var(--mono); font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--accent);
+    display:flex; align-items:center; gap:.6rem; margin-bottom:1.2rem; }
+  .eyebrow::before{ content:""; width:40px; height:2px; background:var(--accent); }
+}
+
+/* HERO */
+.hero{ min-height:100svh; display:flex; flex-direction:column; justify-content:center; padding-top:5rem; padding-bottom:3rem; }
+.hero__meta{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:.8rem; text-transform:uppercase;
+  letter-spacing:.05em; color:var(--ink-2); border-bottom:2px solid var(--ink); padding-bottom:1rem; margin-bottom:2rem; flex-wrap:wrap; gap:1rem; }
+.hero h1{ font-size:var(--d3); }
+.hero h1 .line{ display:block; overflow:hidden; }
+.hero h1 .line > span{ display:inline-block; transform:translateY(105%); animation:rise 1s var(--ease) forwards; }
+.hero h1 .line:nth-child(2) > span{ animation-delay:.12s; }
+.hero h1 .line:nth-child(3) > span{ animation-delay:.24s; }
+@keyframes rise{ to{ transform:none; } }
+.hero h1 .out{ color:transparent; -webkit-text-stroke:2px var(--ink); }
+.hero h1 .acc{ color:var(--accent); }
+.hero__row{ display:flex; justify-content:space-between; align-items:flex-end; gap:2rem; margin-top:2.5rem; flex-wrap:wrap; }
+.hero__sub{ max-width:42ch; font-size:var(--d1); line-height:1.2; opacity:0; animation:fade 1s var(--ease) .6s forwards; }
+.hero__sub b{ color:var(--accent); }
+.hero__actions{ display:flex; gap:1rem; opacity:0; animation:fade 1s var(--ease) .8s forwards; flex-wrap:wrap; }
+@keyframes fade{ to{ opacity:1; } }
+
+/* big marquee */
+.bigmar{ overflow:hidden; border-block:2px solid var(--ink); padding-block:.6rem; background:var(--ink); color:var(--paper); }
+.bigmar__track{ display:flex; gap:2rem; width:max-content; animation:scrollx 26s linear infinite; }
+.bigmar:hover .bigmar__track{ animation-play-state:paused; }
+.bigmar span{ font-size:var(--d2); font-weight:900; text-transform:uppercase; letter-spacing:-.03em; white-space:nowrap; display:inline-flex; gap:2rem; align-items:center; }
+.bigmar span::after{ content:"●"; color:var(--accent); font-size:.4em; }
+.bigmar--rev{ background:var(--paper); color:var(--ink); border-top:none; }
+.bigmar--rev .bigmar__track{ animation-direction:reverse; }
+.bigmar--rev span{ color:transparent; -webkit-text-stroke:1.5px var(--ink); }
+@keyframes scrollx{ to{ transform:translateX(-50%); } }
+
+/* reveal */
+.reveal{ opacity:0; transform:translateY(40px); transition:opacity .9s var(--ease),transform .9s var(--ease); }
+.reveal.in{ opacity:1; transform:none; }
+.reveal[data-d="1"]{ transition-delay:.08s }.reveal[data-d="2"]{ transition-delay:.16s }.reveal[data-d="3"]{ transition-delay:.24s }.reveal[data-d="4"]{ transition-delay:.32s }
+
+.sec-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:2rem; margin-bottom:3.5rem; flex-wrap:wrap; }
+.sec-head h2{ font-size:var(--d2); }
+.sec-head .idx{ font-family:var(--mono); font-size:.85rem; color:var(--ink-2); }
+
+/* ABOUT */
+.about{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(2rem,5vw,5rem); align-items:center; }
+@media(max-width:820px){ .about{ grid-template-columns:1fr; } }
+.about__photo{ position:relative; border:2px solid var(--ink); }
+.about__photo img{ width:100%; aspect-ratio:1; object-fit:cover; filter:grayscale(1) contrast(1.05); transition:filter .5s; }
+.about__photo:hover img{ filter:none; }
+.about__photo::after{ content:"EST. 2019"; position:absolute; bottom:-2px; right:-2px; background:var(--accent); color:#fff;
+  font-family:var(--mono); font-size:.75rem; padding:.5rem .9rem; font-weight:700; }
+.about p{ font-size:var(--d1); line-height:1.3; margin-bottom:1.5rem; }
+.about p.small{ font-size:var(--d0); line-height:1.55; color:var(--ink-2); }
+.about b{ color:var(--accent); }
+.stats{ display:grid; grid-template-columns:repeat(2,1fr); border-top:2px solid var(--ink); margin-top:2rem; }
+.stat{ padding:1.4rem 0; border-bottom:2px solid var(--ink); }
+.stat:nth-child(odd){ border-right:2px solid var(--ink); padding-right:1rem; }
+.stat:nth-child(even){ padding-left:1.4rem; }
+.stat__num{ font-size:var(--d2); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; }
+.stat__num .s{ color:var(--accent); }
+.stat__label{ font-family:var(--mono); font-size:.75rem; text-transform:uppercase; color:var(--ink-2); margin-top:.4rem; }
+
+/* SKILLS — rows */
+.srow{ display:grid; grid-template-columns:minmax(180px,1fr) 3fr; gap:2rem; padding:1.6rem 0; border-top:2px solid var(--ink); align-items:baseline; transition:padding-left .4s var(--ease),background .4s; }
+.srow:last-child{ border-bottom:2px solid var(--ink); }
+.srow:hover{ padding-left:1rem; background:var(--ink); color:var(--paper); }
+.srow:hover .srow__cat{ color:var(--accent-2); }
+.srow:hover .chip{ border-color:var(--paper); }
+.srow__cat{ font-size:var(--d1); font-weight:900; text-transform:uppercase; }
+.chips{ display:flex; flex-wrap:wrap; gap:.6rem; }
+.chip{ font-family:var(--mono); font-size:.8rem; padding:.3rem .7rem; border:1.5px solid currentColor; border-radius:100px; }
+
+/* PROJECTS */
+.project{ border-top:2px solid var(--ink); padding-block:clamp(2rem,5vw,4rem); display:grid; grid-template-columns:auto 1fr; gap:clamp(1.5rem,5vw,4rem); }
+.projects .project:last-child{ border-bottom:2px solid var(--ink); }
+@media(max-width:760px){ .project{ grid-template-columns:1fr; } }
+.project__num{ font-size:var(--huge); font-weight:900; line-height:.8; color:transparent; -webkit-text-stroke:2px var(--ink);
+  transition:-webkit-text-stroke .4s,color .4s; }
+.project:hover .project__num{ color:var(--accent); -webkit-text-stroke:2px var(--accent); }
+.project__head{ display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
+.project h3{ font-size:var(--d2); }
+.project__role{ font-family:var(--mono); font-size:.8rem; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+.project__tag{ font-size:var(--d1); line-height:1.25; margin-bottom:1.5rem; max-width:50ch; }
+.project ul{ display:grid; gap:.6rem; margin-bottom:1.5rem; max-width:65ch; }
+.project li{ padding-left:1.6rem; position:relative; color:var(--ink-2); }
+.project li::before{ content:"→"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+.project__foot{ display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
+.project__link{ font-family:var(--mono); font-size:.85rem; text-transform:uppercase; display:inline-flex; align-items:center; gap:.4rem; border-bottom:2px solid var(--accent); padding-bottom:.2rem; transition:gap .3s; }
+.project__link:hover{ gap:.9rem; }
+
+/* EXPERIENCE */
+.exp{ display:grid; grid-template-columns:auto 1fr; gap:2rem; border-top:2px solid var(--ink); padding-block:2rem; align-items:baseline; }
+.experience .exp:last-child{ border-bottom:2px solid var(--ink); }
+@media(max-width:620px){ .exp{ grid-template-columns:1fr; gap:.6rem; } }
+.exp__when{ font-family:var(--mono); font-size:.85rem; color:var(--accent); white-space:nowrap; }
+.exp h3{ font-size:var(--d1); margin-bottom:.6rem; }
+.exp p{ color:var(--ink-2); max-width:60ch; }
+
+/* CONTACT */
+.contact{ background:var(--ink); color:var(--paper); }
+.contact .eyebrow{ color:var(--accent-2); } .contact .eyebrow::before{ background:var(--accent-2); }
+.contact__big{ font-size:var(--d3); margin-bottom:2rem; }
+.contact__big a{ color:transparent; -webkit-text-stroke:2px var(--paper); transition:color .3s,-webkit-text-stroke .3s; word-break:break-word; }
+.contact__big a:hover{ color:var(--accent-2); -webkit-text-stroke:2px var(--accent-2); }
+.contact .btn{ border-color:var(--paper); color:var(--paper); }
+.contact .btn::before{ background:var(--accent); }
+.socials{ display:flex; gap:2rem; flex-wrap:wrap; margin-top:3rem; font-family:var(--mono); font-size:.85rem; text-transform:uppercase; border-top:2px solid var(--ink-2); padding-top:1.5rem; }
+.socials a{ position:relative; } .socials a:hover{ color:var(--accent-2); }
+footer{ background:var(--ink); color:var(--ink-2); text-align:center; padding:2rem; font-family:var(--mono); font-size:.75rem; text-transform:uppercase; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  .reveal{ opacity:1; transform:none; }
+  .hero h1 .line > span,.hero__sub,.hero__actions{ opacity:1; transform:none; }
+}
+</style>
+</head>
+<body data-icon-theme="light">
+<div class="grain"></div>
+<div class="cursor"></div>
+
+<nav class="nav">
+  <a class="nav__brand" href="#top">SHISHIR SABBIR©</a>
+  <ul class="nav__links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="nav__brand" href="assets/resume.pdf" download>RÉSUMÉ ↓</a>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="hero__meta">
+      <span>Full-Stack Developer</span>
+      <span>Rajshahi · Bangladesh</span>
+      <span>Available — '26</span>
+    </div>
+    <h1>
+      <span class="line"><span>Shishir</span></span>
+      <span class="line"><span class="out">Sabbir</span></span>
+      <span class="line"><span class="acc">Builder.</span></span>
+    </h1>
+    <div class="hero__row">
+      <p class="hero__sub">I build complete products end to end — from large-scale <b>scrapers</b> to <b>Shopify</b> storefronts to <b>self-hosted</b> platforms.</p>
+      <div class="hero__actions">
+        <a class="btn btn--fill" href="#work"><span>View Work</span></a>
+        <a class="btn" href="mailto:shishir.sabbir@gmail.com"><span>Email →</span></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="bigmar"><div class="bigmar__track">
+  <span>AUTOMATION</span><span>SCRAPING</span><span>SHOPIFY</span><span>FULL-STACK</span><span>SELF-HOSTED</span>
+  <span>AUTOMATION</span><span>SCRAPING</span><span>SHOPIFY</span><span>FULL-STACK</span><span>SELF-HOSTED</span>
+</div></div>
+
+<section id="about">
+  <div class="container">
+    <div class="about">
+      <div class="about__photo reveal"><img src="assets/headshot.png" alt="Shishir Sabbir" /></div>
+      <div>
+        <p class="eyebrow reveal">(01) About</p>
+        <p class="reveal" data-d="1">Self-taught developer building since 2019. I design and ship <b>entire products</b> — monorepos, APIs, data layers, frontends, and self-hosted VPS deployments.</p>
+        <p class="small reveal" data-d="2">Started with C and Python, moved through Node.js and advanced CSS into professional web development. My edge is large-scale web automation &amp; scraping, and building/customizing Shopify and Strapi platforms.</p>
+        <div class="stats reveal" data-d="3">
+          <div class="stat"><div class="stat__num" data-count="6">0<span class="s">+</span></div><div class="stat__label">Years coding</div></div>
+          <div class="stat"><div class="stat__num" data-count="70000">0<span class="s">+</span></div><div class="stat__label">Products scraped</div></div>
+          <div class="stat"><div class="stat__num" data-count="3">0</div><div class="stat__label">Platforms solo</div></div>
+          <div class="stat"><div class="stat__num" data-count="15">0<span class="s">+</span></div><div class="stat__label">Daily tools</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bigmar bigmar--rev"><div class="bigmar__track">
+  <span>TypeScript</span><span>Python</span><span>Fastify</span><span>Next.js</span><span>Playwright</span><span>Strapi</span><span>Docker</span>
+  <span>TypeScript</span><span>Python</span><span>Fastify</span><span>Next.js</span><span>Playwright</span><span>Strapi</span><span>Docker</span>
+</div></div>
+
+<section id="skills">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>What I<br>work with</h2>
+      <span class="idx">(02) — Skills</span>
+    </div>
+    <div class="srows">
+      <div class="srow reveal"><div class="srow__cat">Languages</div><div class="chips"><span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">Python</span><span class="chip">C</span><span class="chip">Bash</span><span class="chip">SQL</span></div></div>
+      <div class="srow reveal"><div class="srow__cat">Frontend</div><div class="chips"><span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Vite</span><span class="chip">Svelte</span><span class="chip">React Native</span><span class="chip">Electron</span><span class="chip">Advanced CSS</span></div></div>
+      <div class="srow reveal"><div class="srow__cat">Backend</div><div class="chips"><span class="chip">Node.js</span><span class="chip">Fastify</span><span class="chip">Express</span><span class="chip">Koa</span><span class="chip">FastAPI</span><span class="chip">REST · GraphQL</span></div></div>
+      <div class="srow reveal"><div class="srow__cat">Data</div><div class="chips"><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">MySQL</span><span class="chip">SQLite</span><span class="chip">Drizzle</span><span class="chip">SQLAlchemy</span></div></div>
+      <div class="srow reveal"><div class="srow__cat">Automation</div><div class="chips"><span class="chip">Playwright</span><span class="chip">Selenium</span><span class="chip">Scrapy</span><span class="chip">BeautifulSoup4</span><span class="chip">selectolax</span><span class="chip">curl_cffi</span></div></div>
+      <div class="srow reveal"><div class="srow__cat">Platforms</div><div class="chips"><span class="chip">Shopify</span><span class="chip">Liquid</span><span class="chip">Strapi 5</span><span class="chip">Chrome MV3</span></div></div>
+      <div class="srow reveal"><div class="srow__cat">Infra</div><div class="chips"><span class="chip">Docker</span><span class="chip">Coolify</span><span class="chip">Nginx</span><span class="chip">Cloudflare</span><span class="chip">Turborepo</span><span class="chip">Linux</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="projects">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>Selected<br>work</h2>
+      <span class="idx">(03) — Built solo</span>
+    </div>
+
+    <article class="project reveal">
+      <div class="project__num">01</div>
+      <div>
+        <div class="project__head"><h3>MobiOrbit</h3><span class="project__role">Founder / Solo · active</span></div>
+        <p class="project__tag">A South-Asia smartphone intelligence &amp; commerce platform — specs, comparison, and search.</p>
+        <ul>
+          <li>pnpm + Turborepo monorepo: Fastify 5 + TypeScript API (raw MongoDB, JWT), a Next.js 15 public site (ISR), and a Vite + React 19 admin with a from-scratch Polaris-inspired component library.</li>
+          <li>Python GSMArena scraper + mobiCrawl Chrome extension (MV3, Shadow DOM); media on Cloudflare R2.</li>
+        </ul>
+        <div class="project__foot">
+          <div class="chips"><span class="chip">Fastify</span><span class="chip">MongoDB</span><span class="chip">Next.js 15</span><span class="chip">React 19</span><span class="chip">Turborepo</span></div>
+          <a class="project__link" href="https://mobiorbit.com" target="_blank" rel="noopener">mobiorbit.com →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project reveal">
+      <div class="project__num">02</div>
+      <div>
+        <div class="project__head"><h3>MyCareer&shy;Pathshala</h3><span class="project__role">Solo</span></div>
+        <p class="project__tag">A full-stack education platform — custom CMS, public site, and admin dashboard, deployed solo.</p>
+        <ul>
+          <li>Custom CMS by forking + extending Strapi 5 (Yarn monorepo), exposing REST &amp; GraphQL, with a custom TipTap rich-editor plugin.</li>
+          <li>Next.js student frontend + separate Next.js admin; Drizzle on PostgreSQL; JWT (jose) + bcrypt; Resend email.</li>
+          <li>Three Docker containers on a Hostinger VPS via Coolify, Nginx, Cloudflare DNS, Let's Encrypt SSL.</li>
+        </ul>
+        <div class="project__foot">
+          <div class="chips"><span class="chip">Strapi 5</span><span class="chip">Next.js</span><span class="chip">Drizzle</span><span class="chip">Docker</span><span class="chip">Coolify</span></div>
+          <a class="project__link" href="https://www.mycareerpathshala.com" target="_blank" rel="noopener">mycareerpathshala.com →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project reveal">
+      <div class="project__num">03</div>
+      <div>
+        <div class="project__head"><h3>Economed</h3><span class="project__role">Freelance</span></div>
+        <p class="project__tag">A production Shopify store powered by a 70,000-product automated data pipeline.</p>
+        <ul>
+          <li>Scraped &amp; processed 70,000+ products into a pipeline that cleans, normalizes, and bulk-imports the full catalog with zero manual entry.</li>
+          <li>Complete store with custom Liquid theming, driven through the Shopify Admin API (GraphQL).</li>
+        </ul>
+        <div class="project__foot">
+          <div class="chips"><span class="chip">Shopify</span><span class="chip">Liquid</span><span class="chip">Admin GraphQL</span><span class="chip">Scrapy</span><span class="chip">curl_cffi</span></div>
+          <a class="project__link" href="https://economed.co.uk" target="_blank" rel="noopener">economed.co.uk →</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="experience">
+  <div class="container">
+    <div class="sec-head reveal"><h2>Path</h2><span class="idx">(04) — Experience</span></div>
+    <div class="exp reveal"><span class="exp__when">2020 — Present</span><div><h3>Freelance Full-Stack Developer</h3><p>End-to-end client web apps — frontend, REST/GraphQL APIs, database design, deployment and VPS self-hosting. Shopify &amp; Strapi customization; large-scale scraping/automation with anti-bot handling.</p></div></div>
+    <div class="exp reveal"><span class="exp__when">2019 — 2020</span><div><h3>Web Developer (early career)</h3><p>Moved from programming fundamentals (C, Python) into professional web development; established backend foundations (FastAPI + SQLAlchemy, Express + MongoDB).</p></div></div>
+    <div class="exp reveal"><span class="exp__when">In progress</span><div><h3>B.Sc. CS — Hebei University of Science &amp; Technology</h3><p>Thesis: deep-learning weld-pool penetration sensing via biprism stereo vision — DE-Net edge-aware CNNs, disparity optimization, 3D feature extraction for weld-quality classification.</p></div></div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="container">
+    <p class="eyebrow reveal">(05) Contact</p>
+    <h2 class="contact__big reveal" data-d="1">Let's build<br>something<br><a href="mailto:shishir.sabbir@gmail.com">together →</a></h2>
+    <div class="hero__actions reveal" data-d="2" style="opacity:1;animation:none">
+      <a class="btn" href="mailto:shishir.sabbir@gmail.com"><span>shishir.sabbir@gmail.com</span></a>
+      <a class="btn" href="assets/resume.pdf" download><span>Download Résumé ↓</span></a>
+    </div>
+    <div class="socials reveal" data-d="3">
+      <a href="mailto:shishir.sabbir@gmail.com">Email</a>
+      <a href="tel:+8801883061280">+880 1883 061280</a>
+      <a href="#">GitHub (soon)</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Shishir Sabbir — Designed &amp; built with advanced CSS.</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold:.18 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  const cIO = new IntersectionObserver(es => es.forEach(e => {
+    if(!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.count;
+    const suffix = el.querySelector('.s'); const sufTxt = suffix ? suffix.outerHTML : '';
+    if(reduce){ el.innerHTML = target.toLocaleString()+sufTxt; cIO.unobserve(el); return; }
+    const dur=1700, t0=performance.now();
+    const tick=t=>{ const p=Math.min((t-t0)/dur,1), e2=1-Math.pow(1-p,3); el.innerHTML=Math.floor(e2*target).toLocaleString()+sufTxt; if(p<1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick); cIO.unobserve(el);
+  }), { threshold:.6 });
+  document.querySelectorAll('[data-count]').forEach(el => cIO.observe(el));
+
+  if(reduce) return;
+
+  const cur = document.querySelector('.cursor');
+  let cx=0,cy=0,tx=0,ty=0;
+  addEventListener('mousemove', e => { tx=e.clientX; ty=e.clientY; });
+  (function loop(){ cx+=(tx-cx)*.25; cy+=(ty-cy)*.25; cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); })();
+  document.querySelectorAll('a,button,.srow,.project,.about__photo').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('grow'));
+  });
+})();
+</script>
+<script src="icons.js"></script>
+</body>
+</html>

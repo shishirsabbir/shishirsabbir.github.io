@@ -1,0 +1,37 @@
+---
+import Icon from '~/components/ui/Icon.astro';
+import { profile } from '~/data/profile';
+import { socials } from '~/data/socials';
+const base = import.meta.env.BASE_URL;
+---
+<section id="contact" class="contact">
+  <div class="container">
+    <p class="eyebrow reveal" style="justify-content:center">05 — contact</p>
+    <h2 class="reveal" data-d="1">Let's build something.<br><a href={`mailto:${profile.email}`}>{profile.email}</a></h2>
+
+    <div class="contact__cta reveal" data-d="2">
+      <a class="btn btn--primary" href={`mailto:${profile.email}`}>./connect <span aria-hidden="true">→</span></a>
+      <a class="btn btn--ghost" href={`${base}${profile.resume}`} download>resume.pdf <Icon name="download" size={0.9} /></a>
+    </div>
+
+    <div class="socials reveal" data-d="3">
+      {socials.map((s) => (
+        <a href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener' } : {})}>
+          <Icon name={s.icon} size={1} /> {s.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact { text-align: center; }
+  .contact h2 { font-size: var(--s3); margin-bottom: var(--space-3); }
+  .contact h2 a { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .contact__cta { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; }
+  .socials { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; margin-top: var(--space-4); font-family: var(--mono); }
+  .socials a { padding: .7rem 1.2rem; border-radius: 8px; border: 1px solid var(--line); font-size: var(--s--1);
+    background: var(--bg-2); transition: border-color .3s, color .3s, box-shadow .3s, transform .25s var(--ease);
+    display: inline-flex; align-items: center; gap: .45em; }
+  .socials a:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 20px -8px var(--accent); transform: translateY(-3px); }
+</style>

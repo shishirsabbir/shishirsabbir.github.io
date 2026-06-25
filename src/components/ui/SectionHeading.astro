@@ -1,0 +1,14 @@
+---
+interface Props { index: string; label: string; }
+const { index, label } = Astro.props;
+---
+<div class="sec-head reveal">
+  <p class="eyebrow">{index} — {label}</p>
+  <h2><slot /></h2>
+</div>
+
+<style>
+  .sec-head { margin-bottom: var(--space-5); max-width: 44ch; }
+  .sec-head h2 { font-size: var(--s3); }
+  .sec-head :global(.b) { color: var(--accent); }
+</style>

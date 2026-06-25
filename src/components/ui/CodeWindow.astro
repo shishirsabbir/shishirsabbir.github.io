@@ -1,0 +1,48 @@
+---
+import { profile } from '~/data/profile';
+import { githubUrl } from '~/data/socials';
+const tg = 'https://t.me/' + profile.handle;
+---
+<div class="codewin reveal" data-d="1">
+  <div class="codewin__bar">
+    <i></i><i></i><i></i><span>profile.ts</span>
+  </div>
+  <pre><code><span class="k">const</span> <span class="f">dev</span> = {'{'}
+  <span class="n">name</span>: <span class="s">"{profile.name}"</span>,
+  <span class="n">role</span>: <span class="s">"Full-Stack Developer"</span>,
+  <span class="n">edge</span>: <span class="s">"web automation &amp; scraping"</span>,
+  <span class="n">stack</span>: [<span class="s">"TypeScript"</span>, <span class="s">"Python"</span>],
+  <span class="n">ships</span>: [<span class="s">"MobiOrbit"</span>, <span class="s">"Economed"</span>],
+  <span class="n">github</span>: <span class="s">"{githubUrl}"</span>,
+  <span class="n">telegram</span>: <span class="s">"{tg}"</span>,
+  <span class="n">selfHosts</span>: <span class="k">true</span>,
+  <span class="c">// since 2019, self-taught</span>
+{'}'};</code></pre>
+</div>
+
+<style>
+  .codewin {
+    border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
+    background: var(--surface-2);
+    box-shadow: 0 30px 80px -30px #000, 0 0 60px -20px var(--accent-dim);
+    position: relative;
+  }
+  /* animated gradient hairline on top edge */
+  .codewin::after {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--violet), transparent);
+    background-size: 200% 100%; animation: scrollx 6s linear infinite; opacity: .8;
+  }
+  .codewin__bar {
+    display: flex; align-items: center; gap: .5rem; padding: .7rem 1rem;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+  }
+  .codewin__bar i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .codewin__bar i:nth-child(1) { background: #ff5f57; }
+  .codewin__bar i:nth-child(2) { background: #febc2e; }
+  .codewin__bar i:nth-child(3) { background: #28c840; }
+  .codewin__bar span { margin-left: auto; font-family: var(--mono); font-size: .7rem; color: var(--muted); }
+  .codewin pre { padding: 1.2rem; font-family: var(--mono); font-size: .8rem; line-height: 1.8; overflow-x: auto; }
+  .k { color: var(--violet); } .s { color: var(--green); } .f { color: var(--accent); }
+  .c { color: var(--muted); } .n { color: #ffb86c; }
+</style>

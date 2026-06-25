@@ -1,0 +1,51 @@
+---
+import Icon from '~/components/ui/Icon.astro';
+import { profile } from '~/data/profile';
+import { githubUrl } from '~/data/socials';
+
+const base = import.meta.env.BASE_URL;
+const links = [
+  { n: '01', href: '#about',      label: 'about' },
+  { n: '02', href: '#skills',     label: 'skills' },
+  { n: '03', href: '#work',       label: 'work' },
+  { n: '04', href: '#experience', label: 'exp' },
+  { n: '05', href: '#contact',    label: 'contact' },
+];
+---
+<nav class="nav" data-nav>
+  <a class="nav__brand" href="#top"><span class="b">~/</span>{profile.handle}</a>
+  <ul class="nav__links">
+    {links.map((l) => (
+      <li><a href={l.href} data-link={l.href}><span>{l.n}.</span> {l.label}</a></li>
+    ))}
+  </ul>
+  <div class="nav__right">
+    <a class="nav__gh" href={githubUrl} target="_blank" rel="noopener" aria-label="GitHub"><Icon name="github" size={1.05} /></a>
+    <a class="btn btn--ghost" href={`${base}${profile.resume}`} download>resume.pdf <Icon name="download" size={0.9} /></a>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--space-2) var(--gutter); backdrop-filter: blur(14px);
+    background: color-mix(in oklab, var(--bg) 70%, transparent);
+    border-bottom: 1px solid transparent; transition: border-color .4s, padding .4s;
+  }
+  .nav.scrolled { border-color: var(--line); padding-block: .6rem; }
+  .nav__brand { font-family: var(--mono); font-weight: 700; display: flex; gap: .5rem; align-items: center; }
+  .nav__brand .b { color: var(--accent); }
+  .nav__links { display: flex; gap: var(--space-3); font-family: var(--mono); font-size: var(--s--1); }
+  .nav__links a { color: var(--muted); transition: color .3s; }
+  .nav__links a span { color: var(--accent); }
+  .nav__links a:hover, .nav__links a.active { color: var(--text); text-shadow: 0 0 10px var(--accent-glow); }
+  .nav__right { display: flex; gap: 1rem; align-items: center; }
+  .nav__gh {
+    display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px;
+    border-radius: 8px; border: 1px solid var(--line); color: var(--muted);
+    background: color-mix(in oklab, var(--surface) 60%, transparent); transition: .3s;
+  }
+  .nav__gh:hover { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 18px -6px var(--accent); }
+  @media (max-width: 720px) { .nav__links { display: none; } }
+</style>

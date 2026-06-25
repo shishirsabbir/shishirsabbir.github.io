@@ -1,0 +1,81 @@
+---
+import CodeWindow from '~/components/ui/CodeWindow.astro';
+import { profile } from '~/data/profile';
+
+const first = 'Shishir'.split('');
+---
+<header class="hero" id="top">
+  <div class="container">
+    <div class="hero__inner">
+      <div class="hero__text">
+        <p class="term">
+          <span class="prompt">{profile.handle}@dev</span>:~$ <span class="cmd">whoami</span><span class="caret">&nbsp;</span>
+        </p>
+
+        <h1>
+          <span class="kinetic">{first.map((c, i) => (
+            <span class="char" style={`--i:${i}`}>{c}</span>
+          ))}</span>
+          {' '}
+          <span class="glitch" data-text="Sabbir">Sabbir</span>
+        </h1>
+
+        <p class="hero__sub">
+          Full-stack developer with an edge in <b>extreme web automation &amp; scraping</b>.
+          I build complete products — Fastify/Next.js monorepos, Shopify pipelines, and
+          <b>self-hosted</b> platforms on bare VPS.
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#work">./view-work <span aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href={`mailto:${profile.email}`}>echo "hello"</a>
+        </div>
+      </div>
+
+      <CodeWindow />
+    </div>
+  </div>
+  <span class="hero__scroll" aria-hidden="true">scroll ↓</span>
+</header>
+
+<style>
+  .hero { min-height: 100svh; display: grid; place-items: center; padding-top: 5rem; }
+  .hero__inner {
+    display: grid; grid-template-columns: 1.3fr .9fr; gap: var(--space-5); align-items: center; width: 100%;
+  }
+  @media (max-width: 900px) { .hero__inner { grid-template-columns: 1fr; } }
+
+  .term { font-family: var(--mono); font-size: var(--s--1); color: var(--green); margin-bottom: var(--space-3); }
+  .term .prompt { color: var(--accent); }
+  .term .cmd { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom;
+    width: 6ch; animation: typing 1s steps(6) .3s both; }
+  @keyframes typing { from { width: 0; } to { width: 6ch; } }
+  .caret { display: inline-block; width: .6ch; background: var(--green); animation: blink 1s steps(1) infinite; }
+
+  h1 { font-size: var(--s4); margin-bottom: var(--space-3); }
+  .char { display: inline-block; opacity: 0; transform: translateY(.45em);
+    animation: charUp .6s var(--ease) forwards; animation-delay: calc(var(--i) * 40ms + .3s); }
+
+  .glitch { position: relative; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; inset: 0;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .glitch::before { background: linear-gradient(#ff4d6d, #ff4d6d); animation: gl1 4s infinite steps(2); opacity: .7; }
+  .glitch::after  { background: linear-gradient(#4dffea, #4dffea); animation: gl2 4.7s infinite steps(2); opacity: .7; }
+
+  .hero__sub { color: var(--muted); font-size: var(--s1); max-width: 48ch; margin-bottom: var(--space-4);
+    opacity: 0; animation: fadeUp .8s var(--ease) 1.1s forwards; }
+  .hero__sub b { color: var(--accent); font-weight: 600; }
+  .hero__cta { display: flex; gap: var(--space-2); flex-wrap: wrap; opacity: 0; animation: fadeUp .8s var(--ease) 1.3s forwards; }
+
+  .hero__scroll { position: absolute; bottom: 1.6rem; left: 50%; translate: -50% 0;
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .2em; color: var(--muted);
+    animation: bob 2s var(--ease) infinite; }
+  @keyframes bob { 50% { transform: translateY(6px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .char, .hero__sub, .hero__cta { opacity: 1; transform: none; }
+    .term .cmd { width: 6ch; }
+  }
+</style>

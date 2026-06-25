@@ -1,0 +1,80 @@
+---
+import SectionHeading from '~/components/ui/SectionHeading.astro';
+import Chip from '~/components/ui/Chip.astro';
+import { projects } from '~/data/projects';
+---
+<section id="work">
+  <div class="container">
+    <SectionHeading index="03" label="selected work">Products shipped <span class="b">solo</span>.</SectionHeading>
+
+    <div class="proj-wrap">
+      <div class="proj-sticky" aria-hidden="true">
+        <div class="proj-visual">
+          {projects.map((p, i) => (
+            <div class={`layer${i === 0 ? ' on' : ''}`} data-v={String(i)} style={`--pa:${p.accent}`}>
+              <div class="glow"></div>
+              <div class="ring"></div>
+              <div class="big">{String(i + 1).padStart(2, '0')}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="proj-list">
+        {projects.map((p, i) => (
+          <article class={`project${i === 0 ? ' active' : ''}`} data-p={String(i)} style={`--pa:${p.accent}`}>
+            <span class="project__role">{p.role}</span>
+            <h3>
+              {p.name}
+              {p.url && (
+                <a href={p.url} target="_blank" rel="noopener">↗ live</a>
+              )}
+            </h3>
+            <p class="project__tag">{p.tagline}</p>
+            <ul>
+              {p.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+            <div class="chips">
+              {p.stack.map((s) => <Chip label={s} accent={p.accent} />)}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .proj-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+  @media (max-width: 900px) { .proj-wrap { grid-template-columns: 1fr; } }
+
+  .proj-sticky { position: sticky; top: 14vh; height: max-content; }
+  @media (max-width: 900px) { .proj-sticky { display: none; } }
+
+  .proj-visual { aspect-ratio: 4 / 3; border-radius: var(--radius); border: 1px solid var(--line);
+    position: relative; overflow: hidden; display: grid; place-items: center; background: var(--bg-2); }
+  .layer { position: absolute; inset: 0; opacity: 0; transition: opacity .6s var(--ease); display: grid; place-items: center; }
+  .layer.on { opacity: 1; }
+  .big { font-family: var(--mono); font-size: clamp(3rem, 10vw, 7rem); font-weight: 800;
+    color: transparent; -webkit-text-stroke: 1.5px var(--pa); }
+  .glow { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--pa) 25%, transparent), transparent 65%); }
+  .ring { position: absolute; width: 70%; aspect-ratio: 1; border: 1px solid var(--pa); border-radius: 50%; opacity: .4; animation: spin2 12s linear infinite; }
+  .ring::after { content: ""; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pa); box-shadow: 0 0 12px var(--pa); }
+  @keyframes spin2 { to { transform: rotate(360deg); } }
+
+  .proj-list { display: flex; flex-direction: column; gap: var(--space-4); }
+  .project { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius);
+    background: color-mix(in oklab, var(--surface) 50%, transparent); transition: border-color .4s, box-shadow .4s; }
+  .project.active { border-color: var(--pa); box-shadow: 0 0 40px -18px var(--pa); }
+  .project__role { font-family: var(--mono); font-size: .72rem; color: var(--pa); text-transform: uppercase; letter-spacing: .06em; }
+  .project h3 { font-size: var(--s2); margin: .4rem 0; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+  .project h3 a { font-family: var(--mono); font-size: .7rem; color: var(--pa); border: 1px solid currentColor;
+    padding: .2rem .55rem; border-radius: 6px; transition: background .3s, color .3s; }
+  .project h3 a:hover { background: var(--pa); color: #04101e; }
+  .project__tag { color: var(--muted); margin-bottom: var(--space-2); }
+  .project ul { display: grid; gap: .5rem; margin-bottom: var(--space-3); }
+  .project li { padding-left: 1.4rem; position: relative; color: var(--muted); font-size: var(--s--1); }
+  .project li::before { content: "▹"; position: absolute; left: 0; color: var(--pa); }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+</style>

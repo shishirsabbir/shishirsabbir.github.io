@@ -1,0 +1,26 @@
+---
+import Base from '~/layouts/Base.astro';
+import Nav from '~/components/sections/Nav.astro';
+import Hero from '~/components/sections/Hero.astro';
+import About from '~/components/sections/About.astro';
+import Marquee from '~/components/ui/Marquee.astro';
+import Skills from '~/components/sections/Skills.astro';
+import Projects from '~/components/sections/Projects.astro';
+import Experience from '~/components/sections/Experience.astro';
+import Contact from '~/components/sections/Contact.astro';
+import Footer from '~/components/sections/Footer.astro';
+import { marquee } from '~/data/skills';
+---
+<Base>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <About />
+    <Marquee items={marquee} />
+    <Skills />
+    <Projects />
+    <Experience />
+    <Contact />
+  </main>
+  <Footer />
+</Base>

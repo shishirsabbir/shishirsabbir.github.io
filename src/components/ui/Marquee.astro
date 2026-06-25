@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import { iconFor } from '~/lib/iconFor';
+
+interface Props { items: string[]; }
+const { items } = Astro.props;
+const track = [...items, ...items]; // duplicate for seamless loop
+---
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {track.map((it) => {
+      const icon = iconFor(it);
+      return (
+        <span class="marquee__item">
+          {icon && <Icon name={icon} size={0.9} />}
+          {it}
+        </span>
+      );
+    })}
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden; padding-block: var(--space-3);
+    border-block: 1px solid var(--line); background: var(--bg-2);
+    -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+            mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee__track { display: flex; gap: var(--space-4); width: max-content; animation: scrollx 34s linear infinite; }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__item {
+    font-family: var(--mono); font-size: var(--s1); color: var(--muted);
+    display: inline-flex; gap: .5em; align-items: center; white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shishir Sabbir — Full-Stack Developer (Bento)</title>
+<meta name="description" content="Full-stack developer specializing in web automation, scraping, Shopify, and self-hosted platforms." />
+<style>
+/* ============================================================
+   BENTO — modular bento-grid, each cell its own animated module
+   ============================================================ */
+@layer reset, tokens, base, components;
+
+@layer reset{
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  img{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+  ul{ list-style:none; }
+}
+
+@layer tokens{
+  :root{
+    --bg:#0a0c10; --cell:#12151c; --cell-2:#161a22; --text:#eef2f8; --muted:#8b97a8; --line:#222834;
+    --accent:#5ea3d8; --accent-2:#7cc0ff; --accent-3:#34d8ff; --green:#3ee08a; --violet:#9b87f5;
+    --grad:linear-gradient(135deg,var(--accent-2),var(--accent),var(--violet));
+    --gap:clamp(.7rem,1.4vw,1.1rem); --radius:20px; --maxw:78rem; --gutter:clamp(1rem,4vw,2.5rem);
+    --section-y:clamp(3rem,8vh,6rem);
+    --s--1:clamp(.78rem,.74rem + .2vw,.9rem);
+    --s0:clamp(.98rem,.93rem + .25vw,1.1rem);
+    --s1:clamp(1.2rem,1rem + .8vw,1.55rem);
+    --s2:clamp(1.7rem,1.3rem + 1.7vw,2.5rem);
+    --s3:clamp(2.3rem,1.6rem + 3.2vw,3.8rem);
+    --s4:clamp(2.8rem,1.8rem + 5vw,5.2rem);
+    --ease:cubic-bezier(.22,1,.36,1);
+    --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+}
+
+@property --ang{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+
+@layer base{
+  body{ font-family:var(--sans); font-size:var(--s0); line-height:1.6; color:var(--text); background:var(--bg);
+    overflow-x:hidden; -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(900px 500px at 85% -10%,#16243f,transparent 60%),radial-gradient(700px 400px at -5% 110%,#1b1840,transparent 60%); }
+  h1,h2,h3{ line-height:1.05; letter-spacing:-.02em; font-weight:800; }
+  .container{ width:min(var(--maxw),100% - 2*var(--gutter)); margin-inline:auto; }
+  section{ padding-block:var(--section-y); position:relative; }
+  ::selection{ background:var(--accent); color:#061018; }
+}
+
+/* cursor */
+.cursor{ position:fixed; width:28px; height:28px; border:1px solid var(--accent); border-radius:50%; translate:-50% -50%;
+  z-index:9999; pointer-events:none; transition:width .25s,height .25s; }
+.cursor.grow{ width:54px; height:54px; background:rgba(94,163,216,.12); }
+@media (hover:none),(pointer:coarse){ .cursor{ display:none; } }
+
+@layer components{
+  .nav{ position:fixed; inset:0 0 auto 0; z-index:100; display:flex; align-items:center; justify-content:space-between;
+    padding:var(--gap) var(--gutter); backdrop-filter:blur(14px); background:color-mix(in oklab,var(--bg) 65%,transparent);
+    border-bottom:1px solid transparent; transition:.4s; }
+  .nav.scrolled{ border-color:var(--line); }
+  .nav__brand{ font-weight:800; display:flex; gap:.55rem; align-items:center; }
+  .nav__brand .dot{ width:10px; height:10px; border-radius:3px; background:var(--grad); }
+  .nav__links{ display:flex; gap:1.4rem; font-family:var(--mono); font-size:var(--s--1); }
+  .nav__links a{ color:var(--muted); transition:color .3s; } .nav__links a:hover{ color:var(--text); }
+  @media(max-width:680px){ .nav__links{ display:none; } }
+
+  .btn{ display:inline-flex; align-items:center; gap:.5rem; padding:.8rem 1.4rem; border-radius:100px; font-weight:600;
+    font-size:var(--s--1); transition:transform .2s var(--ease),box-shadow .3s; }
+  .btn--primary{ background:var(--grad); color:#061018; box-shadow:0 10px 30px -10px var(--accent); }
+  .btn--primary:hover{ box-shadow:0 14px 36px -10px var(--accent); }
+  .btn--ghost{ border:1px solid var(--line); color:var(--text); background:var(--cell); }
+  .btn--ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* the bento cell */
+  .cell{ background:var(--cell); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(1.1rem,2vw,1.8rem);
+    position:relative; overflow:hidden; transition:transform .4s var(--ease),border-color .4s,box-shadow .4s;
+    opacity:0; transform:translateY(26px) scale(.98); }
+  .cell.in{ opacity:1; transform:none; }
+  .cell:hover{ border-color:color-mix(in oklab,var(--accent) 50%,var(--line)); box-shadow:0 24px 50px -28px var(--accent); }
+  .cell::after{ content:""; position:absolute; inset:0; opacity:0; transition:opacity .4s;
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(94,163,216,.1),transparent 60%); }
+  .cell:hover::after{ opacity:1; }
+  .cell__label{ font-family:var(--mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+    display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; position:relative; }
+  .cell__label::before{ content:""; width:6px; height:6px; border-radius:2px; background:var(--accent); }
+}
+
+/* HERO bento */
+.hero{ padding-top:5.5rem; }
+.bento{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--gap); grid-auto-rows:minmax(110px,auto); }
+@media(max-width:880px){ .bento{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:520px){ .bento{ grid-template-columns:1fr; } }
+
+.col-2{ grid-column:span 2; } .col-3{ grid-column:span 3; } .col-4{ grid-column:span 4; }
+.row-2{ grid-row:span 2; }
+@media(max-width:880px){ .col-3,.col-4{ grid-column:span 2; } .lg-col-1{ grid-column:span 1; } }
+@media(max-width:520px){ .col-2,.col-3,.col-4{ grid-column:span 1; } }
+
+/* hero name cell */
+.cell-name{ display:flex; flex-direction:column; justify-content:space-between; gap:1.5rem;
+  background:linear-gradient(135deg,var(--cell),var(--cell-2)); }
+.cell-name .pill{ align-self:flex-start; display:inline-flex; gap:.5rem; align-items:center; font-family:var(--mono); font-size:var(--s--1);
+  padding:.4rem 1rem; border:1px solid var(--line); border-radius:100px; }
+.cell-name .pill .live{ width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 10px var(--green); animation:pulse 2s infinite; }
+@keyframes pulse{ 50%{ transform:scale(1.5); opacity:.5; } }
+.cell-name h1{ font-size:var(--s4); }
+.cell-name h1 .g{ background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.cell-name p{ color:var(--muted); font-size:var(--s1); max-width:42ch; }
+.cell-name p b{ color:var(--text); }
+.cell-name .cta{ display:flex; gap:.7rem; flex-wrap:wrap; }
+
+/* photo cell */
+.cell-photo{ padding:0; }
+.cell-photo img{ width:100%; height:100%; object-fit:cover; min-height:220px; transition:transform 1.2s var(--ease); }
+.cell-photo:hover img{ transform:scale(1.05); }
+.cell-photo .tag{ position:absolute; left:.9rem; bottom:.9rem; font-family:var(--mono); font-size:.72rem; padding:.35rem .7rem;
+  border-radius:100px; background:color-mix(in oklab,var(--bg) 70%,transparent); backdrop-filter:blur(6px); border:1px solid var(--line); }
+
+/* stat cell */
+.cell-stat{ display:flex; flex-direction:column; justify-content:center; }
+.cell-stat .num{ font-size:var(--s3); font-weight:800; line-height:1; font-variant-numeric:tabular-nums;
+  background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.cell-stat .lab{ color:var(--muted); font-size:var(--s--1); margin-top:.4rem; }
+
+/* ring/automation accent cell */
+.cell-accent{ display:grid; place-items:center; background:radial-gradient(circle at 50% 40%,#14233c,var(--cell)); min-height:160px; }
+.cell-accent .ring{ position:relative; width:90px; aspect-ratio:1; border-radius:50%;
+  background:conic-gradient(from var(--ang),var(--accent-3),transparent 55%,var(--violet)); animation:spin 6s linear infinite;
+  -webkit-mask:radial-gradient(circle,transparent 54%,#000 55%); mask:radial-gradient(circle,transparent 54%,#000 55%); }
+@keyframes spin{ to{ --ang:360deg; } }
+.cell-accent .ctext{ position:absolute; font-family:var(--mono); font-size:.72rem; color:var(--muted); text-align:center; }
+
+/* section heading */
+.sec-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:1.5rem; margin-bottom:1.4rem; flex-wrap:wrap; }
+.sec-head h2{ font-size:var(--s2); }
+.sec-head h2 .g{ background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.sec-head .idx{ font-family:var(--mono); font-size:var(--s--1); color:var(--muted); }
+
+/* skills cells */
+.cell-skill h3{ font-size:var(--s0); margin-bottom:.9rem; }
+.chips{ display:flex; flex-wrap:wrap; gap:.4rem; }
+.chip{ font-family:var(--mono); font-size:.72rem; padding:.26rem .58rem; border-radius:7px; background:var(--cell-2);
+  color:var(--accent-2); border:1px solid var(--line); transition:transform .2s; }
+.cell-skill:hover .chip{ transform:translateY(-1px); }
+
+/* project cells */
+.cell-project{ display:flex; flex-direction:column; }
+.cell-project .top{ display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; margin-bottom:.6rem; }
+.cell-project .role{ font-family:var(--mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--pa,var(--accent)); }
+.cell-project h3{ font-size:var(--s2); margin:.2rem 0 .5rem; }
+.cell-project .lk{ font-family:var(--mono); font-size:.7rem; color:var(--pa,var(--accent)); border:1px solid currentColor; padding:.2rem .55rem; border-radius:100px; white-space:nowrap; transition:.3s; }
+.cell-project .lk:hover{ background:var(--pa,var(--accent)); color:#061018; }
+.cell-project p{ color:var(--muted); font-size:var(--s--1); margin-bottom:1rem; flex:0; }
+.cell-project ul{ display:grid; gap:.45rem; margin-bottom:1rem; flex:1; }
+.cell-project li{ padding-left:1.3rem; position:relative; color:var(--muted); font-size:var(--s--1); }
+.cell-project li::before{ content:"▹"; position:absolute; left:0; color:var(--pa,var(--accent)); }
+.cell-project .chips .chip{ color:var(--pa,var(--accent)); }
+.cell-project::before{ content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--pa,var(--accent)); opacity:.8; }
+
+/* marquee cell */
+.cell-marquee{ padding:0; display:flex; align-items:center; }
+.mq{ overflow:hidden; width:100%;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent); mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent); }
+.mq__track{ display:flex; gap:1.6rem; width:max-content; animation:scrollx 24s linear infinite; }
+.mq span{ font-family:var(--mono); font-size:var(--s1); color:var(--muted); white-space:nowrap; display:inline-flex; gap:1.6rem; align-items:center; }
+.mq span::after{ content:"●"; color:var(--accent); font-size:.4rem; }
+@keyframes scrollx{ to{ transform:translateX(-50%); } }
+
+/* exp cells */
+.cell-exp .when{ font-family:var(--mono); font-size:var(--s--1); color:var(--accent); }
+.cell-exp h3{ font-size:var(--s1); margin:.4rem 0; }
+.cell-exp p{ color:var(--muted); font-size:var(--s--1); }
+
+/* contact cell */
+.cell-contact{ grid-column:span 4; text-align:center; padding-block:clamp(2.5rem,6vw,4.5rem);
+  background:radial-gradient(circle at 50% 0%,#15263f,var(--cell)); }
+@media(max-width:880px){ .cell-contact{ grid-column:span 2; } } @media(max-width:520px){ .cell-contact{ grid-column:span 1; } }
+.cell-contact h2{ font-size:var(--s3); margin-bottom:1.5rem; }
+.cell-contact h2 a{ background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.cell-contact .cta{ display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap; margin-bottom:1.6rem; }
+.socials{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; font-family:var(--mono); font-size:var(--s--1); }
+.socials a{ color:var(--muted); transition:color .3s; } .socials a:hover{ color:var(--accent); }
+
+footer{ text-align:center; padding:var(--section-y) var(--gutter) 2rem; color:var(--muted); font-family:var(--mono); font-size:var(--s--1); }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  .cell{ opacity:1; transform:none; }
+}
+</style>
+</head>
+<body data-icon-theme="dark">
+<div class="cursor"></div>
+
+<nav class="nav">
+  <a class="nav__brand" href="#top"><span class="dot"></span>Shishir Sabbir</a>
+  <ul class="nav__links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="btn btn--ghost" href="assets/resume.pdf" download>Résumé ↓</a>
+</nav>
+
+<section class="hero" id="top">
+  <div class="container">
+    <div class="bento">
+      <div class="cell cell-name col-3 row-2">
+        <span class="pill"><span class="live"></span>Available for freelance · Rajshahi, BD</span>
+        <h1>Shishir <span class="g">Sabbir</span></h1>
+        <p>Full-stack developer who ships complete products end to end — from large-scale <b>scrapers</b> to <b>Shopify</b> storefronts to <b>self-hosted</b> platforms.</p>
+        <div class="cta">
+          <a class="btn btn--primary" href="#work">View Work →</a>
+          <a class="btn btn--ghost" href="mailto:shishir.sabbir@gmail.com">Email me</a>
+        </div>
+      </div>
+      <div class="cell cell-photo row-2 lg-col-1"><img src="assets/headshot.png" alt="Shishir Sabbir" /><span class="tag">Self-taught since '19</span></div>
+
+      <div class="cell cell-stat"><span class="num" data-count="6" data-suffix="+">0</span><span class="lab">Years coding</span></div>
+      <div class="cell cell-stat"><span class="num" data-count="70000" data-suffix="+">0</span><span class="lab">Products scraped</span></div>
+      <div class="cell cell-stat"><span class="num" data-count="3">0</span><span class="lab">Platforms solo</span></div>
+      <div class="cell cell-stat"><span class="num" data-count="15" data-suffix="+">0</span><span class="lab">Daily tools</span></div>
+
+      <div class="cell cell-accent col-2"><div class="ring"></div><div class="ctext">automation<br>&amp; scraping</div></div>
+      <div class="cell cell-marquee col-2">
+        <div class="mq"><div class="mq__track">
+          <span>TypeScript</span><span>Python</span><span>Playwright</span><span>Fastify</span><span>Next.js</span><span>Shopify</span><span>Strapi</span><span>Docker</span>
+          <span>TypeScript</span><span>Python</span><span>Playwright</span><span>Fastify</span><span>Next.js</span><span>Shopify</span><span>Strapi</span><span>Docker</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="sec-head"><h2>The <span class="g">stack</span> I run.</h2><span class="idx">01 / Skills</span></div>
+    <div class="bento">
+      <div class="cell cell-skill col-2"><span class="cell__label">Languages</span><div class="chips"><span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">Python</span><span class="chip">C</span><span class="chip">Bash</span><span class="chip">SQL</span></div></div>
+      <div class="cell cell-skill col-2"><span class="cell__label">Automation &amp; Scraping</span><div class="chips"><span class="chip">Playwright</span><span class="chip">Selenium</span><span class="chip">Scrapy</span><span class="chip">BeautifulSoup4</span><span class="chip">selectolax</span><span class="chip">httpx</span><span class="chip">curl_cffi</span></div></div>
+      <div class="cell cell-skill col-2"><span class="cell__label">Frontend</span><div class="chips"><span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Vite</span><span class="chip">Svelte</span><span class="chip">React Native</span><span class="chip">Electron</span></div></div>
+      <div class="cell cell-skill col-2"><span class="cell__label">Backend</span><div class="chips"><span class="chip">Node.js</span><span class="chip">Fastify</span><span class="chip">Express</span><span class="chip">Koa</span><span class="chip">FastAPI</span><span class="chip">REST · GraphQL</span></div></div>
+      <div class="cell cell-skill col-2"><span class="cell__label">Databases &amp; ORMs</span><div class="chips"><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">MongoDB</span><span class="chip">SQLite</span><span class="chip">Drizzle</span><span class="chip">SQLAlchemy</span></div></div>
+      <div class="cell cell-skill"><span class="cell__label">Platforms</span><div class="chips"><span class="chip">Shopify</span><span class="chip">Strapi 5</span><span class="chip">Chrome MV3</span></div></div>
+      <div class="cell cell-skill"><span class="cell__label">ML &amp; Data</span><div class="chips"><span class="chip">NumPy</span><span class="chip">pandas</span><span class="chip">OpenCV</span><span class="chip">Jupyter</span></div></div>
+      <div class="cell cell-skill col-4"><span class="cell__label">Infra &amp; DevOps</span><div class="chips"><span class="chip">Docker</span><span class="chip">Coolify</span><span class="chip">Nginx</span><span class="chip">Cloudflare R2</span><span class="chip">Let's Encrypt</span><span class="chip">Turborepo</span><span class="chip">pnpm / Yarn</span><span class="chip">VPS self-hosting</span><span class="chip">Linux</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="container">
+    <div class="sec-head"><h2>Products shipped <span class="g">solo</span>.</h2><span class="idx">02 / Work</span></div>
+    <div class="bento">
+      <article class="cell cell-project col-2 row-2" style="--pa:#34d8ff">
+        <div class="top"><div><span class="role">Founder / Solo · active</span><h3>MobiOrbit</h3></div><a class="lk" href="https://mobiorbit.com" target="_blank" rel="noopener">↗ live</a></div>
+        <p>A South-Asia smartphone intelligence &amp; commerce platform — specs, comparison, and search, ad-ready from day one.</p>
+        <ul>
+          <li>pnpm + Turborepo monorepo: Fastify 5 + TypeScript API (raw MongoDB driver, JWT), a Next.js 15 public site (ISR), and a Vite + React 19 admin with a from-scratch Polaris-inspired component library.</li>
+          <li>Python GSMArena scraper + mobiCrawl Chrome extension (MV3, Shadow DOM) for spec capture; media on Cloudflare R2.</li>
+          <li>Clean architecture: services layer, slug-based routing, typed raw-driver Mongo (no ODM).</li>
+        </ul>
+        <div class="chips"><span class="chip">Fastify</span><span class="chip">MongoDB</span><span class="chip">Next.js 15</span><span class="chip">React 19</span><span class="chip">Turborepo</span><span class="chip">Cloudflare R2</span></div>
+      </article>
+
+      <article class="cell cell-project col-2" style="--pa:#9b87f5">
+        <div class="top"><div><span class="role">Solo</span><h3>MyCareerPathshala</h3></div><a class="lk" href="https://www.mycareerpathshala.com" target="_blank" rel="noopener">↗ live</a></div>
+        <p>A full-stack education platform — custom CMS, public site, and admin dashboard, deployed solo.</p>
+        <ul>
+          <li>Custom CMS by forking + extending Strapi 5 (Yarn monorepo), REST &amp; GraphQL, custom TipTap editor plugin.</li>
+          <li>Next.js student + admin apps; Drizzle on PostgreSQL; JWT (jose) + bcrypt; three Docker containers on a VPS via Coolify, Nginx, Let's Encrypt.</li>
+        </ul>
+        <div class="chips"><span class="chip">Strapi 5</span><span class="chip">Next.js</span><span class="chip">Drizzle</span><span class="chip">Docker</span><span class="chip">Coolify</span></div>
+      </article>
+
+      <article class="cell cell-project col-2" style="--pa:#3ee08a">
+        <div class="top"><div><span class="role">Freelance</span><h3>Economed</h3></div><a class="lk" href="https://economed.co.uk" target="_blank" rel="noopener">↗ live</a></div>
+        <p>A production Shopify store powered by a 70,000-product automated data pipeline.</p>
+        <ul>
+          <li>Scraped &amp; processed 70,000+ products into a pipeline that cleans, normalizes, and bulk-imports the catalog with zero manual entry.</li>
+          <li>Complete store with custom Liquid theming, driven through the Shopify Admin API (GraphQL).</li>
+        </ul>
+        <div class="chips"><span class="chip">Shopify</span><span class="chip">Liquid</span><span class="chip">Admin GraphQL</span><span class="chip">Scrapy</span><span class="chip">curl_cffi</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container">
+    <div class="sec-head"><h2>The <span class="g">path</span>.</h2><span class="idx">03 / Experience</span></div>
+    <div class="bento">
+      <div class="cell cell-exp col-2"><span class="when">2020 — Present</span><h3>Freelance Full-Stack Developer</h3><p>End-to-end client web apps; Shopify &amp; Strapi customization; large-scale scraping/automation with anti-bot handling; VPS deployment &amp; self-hosting.</p></div>
+      <div class="cell cell-exp col-2"><span class="when">2019 — 2020</span><h3>Web Developer · Early career</h3><p>From C/Python fundamentals into professional web development; first backends (FastAPI + SQLAlchemy, Express + MongoDB).</p></div>
+      <div class="cell cell-exp col-4"><span class="when">In progress · Research</span><h3>B.Sc. Computer Science — Hebei University of Science &amp; Technology</h3><p>Thesis: deep-learning weld-pool penetration sensing via biprism stereo vision — DE-Net edge-aware CNNs, disparity optimization, and 3D feature extraction for weld-quality classification. Applied CV &amp; ML with OpenCV, scikit-learn, NumPy/pandas, Jupyter.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="bento">
+      <div class="cell cell-contact">
+        <h2>Let's build something.<br><a href="mailto:shishir.sabbir@gmail.com">shishir.sabbir@gmail.com</a></h2>
+        <div class="cta">
+          <a class="btn btn--primary" href="mailto:shishir.sabbir@gmail.com">Start a conversation →</a>
+          <a class="btn btn--ghost" href="assets/resume.pdf" download>Download Résumé</a>
+        </div>
+        <div class="socials">
+          <a href="mailto:shishir.sabbir@gmail.com">Email</a>
+          <a href="tel:+8801883061280">+880 1883 061280</a>
+          <a href="#">GitHub (soon)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Shishir Sabbir · Built with advanced CSS · bento edition.</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // staggered cell reveal per bento grid
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if(!e.isIntersecting) return;
+    const cells = [...e.target.querySelectorAll('.cell')];
+    cells.forEach((c, i) => setTimeout(() => c.classList.add('in'), reduce ? 0 : i * 70));
+    io.unobserve(e.target);
+  }), { threshold:.12 });
+  document.querySelectorAll('.bento').forEach(b => io.observe(b));
+
+  const nav = document.querySelector('.nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), { passive:true });
+
+  const cIO = new IntersectionObserver(es => es.forEach(e => {
+    if(!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.count, suf = el.dataset.suffix || '';
+    if(reduce){ el.textContent = target.toLocaleString()+suf; cIO.unobserve(el); return; }
+    const dur=1600, t0=performance.now();
+    const tick=t=>{ const p=Math.min((t-t0)/dur,1), e2=1-Math.pow(1-p,3); el.textContent=Math.floor(e2*target).toLocaleString()+suf; if(p<1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick); cIO.unobserve(el);
+  }), { threshold:.6 });
+  document.querySelectorAll('[data-count]').forEach(el => cIO.observe(el));
+
+  if(reduce) return;
+
+  const cur = document.querySelector('.cursor');
+  let cx=0,cy=0,tx=0,ty=0;
+  addEventListener('mousemove', e => { tx=e.clientX; ty=e.clientY; });
+  (function loop(){ cx+=(tx-cx)*.2; cy+=(ty-cy)*.2; cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); })();
+  document.querySelectorAll('a,button,.cell').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('grow'));
+  });
+  document.querySelectorAll('.cell').forEach(card => card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX-r.left)+'px'); card.style.setProperty('--my', (e.clientY-r.top)+'px');
+  }));
+  document.querySelectorAll('.btn').forEach(b => {
+    b.addEventListener('mousemove', e => { const r=b.getBoundingClientRect(); b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.2}px,${(e.clientY-r.top-r.height/2)*.3}px)`; });
+    b.addEventListener('mouseleave', () => b.style.transform='');
+  });
+})();
+</script>
+<script src="icons.js"></script>
+</body>
+</html>

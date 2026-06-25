@@ -1,0 +1,57 @@
+/* tokens.css — design tokens (Nebula direction: dark terminal / neon-blue) */
+@layer tokens {
+  :root {
+    /* base surfaces */
+    --bg:        #060a14;
+    --bg-2:      #0a1120;
+    --surface:   #0d1626;
+    --surface-2: #0a1322;
+    --text:      #dbe6f5;
+    --muted:     #7c8aa3;
+    --line:      #16223a;
+
+    /* accents */
+    --accent:      #4db8ff;
+    --accent-2:    #7cc0ff;
+    --accent-3:    #34d8ff;
+    --accent-dim:  #1a4f7a;
+    --accent-glow: #4db8ff;
+    --violet:      #a78bfa;
+    --green:       #3ee08a;
+    --grad: linear-gradient(120deg, #4db8ff, #7cc0ff, #a78bfa);
+
+    /* spacing scale */
+    --space-1: .5rem;
+    --space-2: 1rem;
+    --space-3: 1.5rem;
+    --space-4: 2.5rem;
+    --space-5: 4rem;
+    --space-6: 6.5rem;
+    --section-y: clamp(4rem, 11vh, 9rem);
+
+    /* radii + layout */
+    --radius:    12px;
+    --radius-lg: 20px;
+    --maxw:   74rem;
+    --gutter: clamp(1rem, 4vw, 3rem);
+
+    /* fluid type scale */
+    --s--1: clamp(.8rem,  .76rem + .2vw,  .92rem);
+    --s0:   clamp(1rem,   .95rem + .3vw,  1.12rem);
+    --s1:   clamp(1.25rem,1.05rem + .9vw, 1.6rem);
+    --s2:   clamp(1.7rem, 1.3rem  + 1.8vw,2.6rem);
+    --s3:   clamp(2.4rem, 1.7rem  + 3.4vw,4rem);
+    --s4:   clamp(3rem,   1.9rem  + 6vw,  6.5rem);
+
+    /* motion */
+    --ease:    cubic-bezier(.22, 1, .36, 1);
+    --ease-io: cubic-bezier(.16, 1, .3, 1);
+
+    /* fonts (system stack for now; self-hosted woff2 can drop into /fonts later) */
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  }
+}
+
+/* animatable custom props (need @property to interpolate) */
+@property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }

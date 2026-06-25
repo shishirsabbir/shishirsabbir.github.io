@@ -1,0 +1,48 @@
+---
+import { ICONS } from '~/lib/iconData';
+
+interface Props {
+  name: string;
+  size?: number;        // em
+  brand?: boolean;      // allow brand color (default true for brand icons)
+  class?: string;
+  label?: string;       // a11y label; if omitted the icon is aria-hidden
+}
+
+const { name, size = 1, brand = true, class: cls = '', label } = Astro.props;
+const def = ICONS[name] ?? ICONS['circle-dot'] ?? ICONS['box'];
+
+/** relative luminance of a #hex color (sRGB) */
+function lum(hex?: string | null): number {
+  if (!hex) return 0.5;
+  let h = hex.replace('#', '');
+  if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+  const v = [0, 2, 4].map((i) => parseInt(h.substr(i, 2), 16) / 255);
+  const f = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  return 0.2126 * f(v[0]) + 0.7152 * f(v[1]) + 0.0722 * f(v[2]);
+}
+
+// Nebula is a dark theme: keep brand color only if it has enough contrast, else paint with currentColor.
+let fill = 'currentColor';
+if (def && def.t === 'b' && brand && def.c && lum(def.c) >= 0.16) fill = def.c;
+
+const common = {
+  width: `${size}em`,
+  height: `${size}em`,
+  viewBox: '0 0 24 24',
+  class: `ico-svg ${cls}`.trim(),
+  ...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true', focusable: 'false' }),
+};
+const line = def && def.t === 'l';
+---
+{def && (
+  line ? (
+    <svg {...common} fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={def.p} />
+  ) : (
+    <svg {...common} fill={fill} set:html={def.p} />
+  )
+)}
+
+<style>
+  .ico-svg { display: inline-block; vertical-align: -0.16em; flex: none; }
+</style>

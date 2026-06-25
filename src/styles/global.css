@@ -1,0 +1,100 @@
+/* global.css — reset, base, background FX, utilities, a11y */
+@import "./tokens.css";
+@import "./motion.css";
+
+@layer reset, tokens, base, components, utilities;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  img, svg, video { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+  ul { list-style: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+}
+
+@layer base {
+  body {
+    font-family: var(--sans);
+    font-size: var(--s0);
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3 { line-height: 1.05; letter-spacing: -.02em; font-weight: 800; }
+  ::selection { background: var(--accent); color: #04101e; }
+
+  .container { width: min(var(--maxw), 100% - 2 * var(--gutter)); margin-inline: auto; }
+  section { padding-block: var(--section-y); position: relative; }
+
+  /* skip link */
+  .skip {
+    position: absolute; left: 8px; top: -60px; z-index: 999;
+    background: var(--surface); color: var(--text); padding: .6rem 1rem;
+    border: 1px solid var(--line); border-radius: 8px; transition: top .2s var(--ease);
+  }
+  .skip:focus { top: 8px; }
+}
+
+@layer components {
+  /* ---- animated background: grid + glow orbs + scanlines ---- */
+  .bg-grid { position: fixed; inset: 0; z-index: -3; pointer-events: none; background:
+      radial-gradient(1200px 600px at 70% -10%, #11254a 0%, transparent 55%),
+      radial-gradient(900px 500px at 0% 100%, #1a1340 0%, transparent 55%), var(--bg); }
+  .bg-grid::before {
+    content: ""; position: absolute; inset: -50%;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 60px 60px; opacity: .4;
+    -webkit-mask: radial-gradient(circle at 50% 40%, #000, transparent 70%);
+            mask: radial-gradient(circle at 50% 40%, #000, transparent 70%);
+    animation: gridmove 30s linear infinite;
+  }
+  .bg-orb { position: fixed; border-radius: 50%; filter: blur(90px); z-index: -2; opacity: .4; pointer-events: none; will-change: transform; }
+  .bg-orb.a { width: 38vw; height: 38vw; left: -6vw; top: 8vh;  background: radial-gradient(circle, #1d6fb8, transparent 65%); animation: float 20s var(--ease) infinite alternate; }
+  .bg-orb.b { width: 30vw; height: 30vw; right: -4vw; bottom: 6vh; background: radial-gradient(circle, #6d4bd6, transparent 65%); animation: float 26s var(--ease) infinite alternate-reverse; }
+  .bg-scan { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+    background: repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.18) 2px 4px); mix-blend-mode: multiply; }
+
+  /* ---- custom cursor ---- */
+  .cursor { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border: 1px solid var(--accent);
+    border-radius: 50%; translate: -50% -50%; z-index: 9999; pointer-events: none;
+    box-shadow: 0 0 16px var(--accent-glow); transition: width .25s, height .25s, background .25s; }
+  .cursor.grow { width: 56px; height: 56px; background: rgba(77,184,255,.12); }
+  @media (hover: none), (pointer: coarse) { .cursor { display: none; } }
+
+  /* ---- buttons ---- */
+  .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .8rem 1.4rem; border-radius: 8px;
+    font-family: var(--mono); font-size: var(--s--1); font-weight: 600; position: relative; overflow: hidden;
+    transition: transform .2s var(--ease), box-shadow .3s, background .3s; will-change: transform; }
+  .btn--primary { background: var(--accent); color: #04101e; box-shadow: 0 0 0 1px var(--accent), 0 8px 30px -10px var(--accent); }
+  .btn--primary:hover { box-shadow: 0 0 0 1px var(--accent), 0 0 30px -2px var(--accent); }
+  .btn--ghost { border: 1px solid var(--line); color: var(--text); background: color-mix(in oklab, var(--surface) 60%, transparent); }
+  .btn--ghost:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 20px -6px var(--accent); }
+
+  /* ---- shared bits ---- */
+  .eyebrow { font-family: var(--mono); font-size: var(--s--1); color: var(--accent); letter-spacing: .04em;
+    display: inline-flex; gap: .6rem; align-items: center; margin-bottom: var(--space-2); }
+  .eyebrow::before { content: "//"; opacity: .6; }
+  .card { background: color-mix(in oklab, var(--surface) 70%, transparent); border: 1px solid var(--line);
+    border-radius: var(--radius); backdrop-filter: blur(8px); }
+  .b-accent { color: var(--accent); }
+
+  .chip { font-family: var(--mono); font-size: .72rem; padding: .26rem .55rem; border-radius: 6px;
+    background: var(--surface-2); color: var(--accent-2); border: 1px solid var(--line);
+    display: inline-flex; align-items: center; gap: .35em; transition: transform .2s, border-color .3s; }
+  .ico-svg { flex: none; }
+}
+
+@layer utilities {
+  .mono { font-family: var(--mono); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  .no-scroll { overflow: hidden; }
+}

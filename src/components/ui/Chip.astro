@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import { iconFor } from '~/lib/iconFor';
+
+interface Props { label: string; accent?: string; }
+const { label, accent } = Astro.props;
+const icon = iconFor(label);
+---
+<span class="chip" style={accent ? `--c:${accent}` : undefined}>
+  {icon && <Icon name={icon} size={0.95} />}
+  {label}
+</span>
+
+<style>
+  .chip { white-space: nowrap; }
+  .chip[style] {
+    color: var(--c);
+    background: color-mix(in oklab, var(--c) 12%, transparent);
+    border-color: color-mix(in oklab, var(--c) 35%, transparent);
+  }
+</style>

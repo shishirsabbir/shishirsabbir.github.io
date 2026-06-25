@@ -1,0 +1,67 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '~/styles/global.css';
+import { profile } from '~/data/profile';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const base = import.meta.env.BASE_URL;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const {
+  title = `${profile.name} — Full-Stack Developer & Automation Engineer`,
+  description = 'Full-stack developer specializing in web automation, scraping, Shopify, and self-hosted platforms. Builder of MobiOrbit, MyCareerPathshala, and Economed.',
+} = Astro.props;
+
+const ogImage = `${site}${base}og.png`;
+const canonical = `${site}${base}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content={profile.name} />
+  <meta name="theme-color" content="#060a14" />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <ClientRouter />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- animated background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-orb a" aria-hidden="true"></div>
+  <div class="bg-orb b" aria-hidden="true"></div>
+  <div class="bg-scan" aria-hidden="true"></div>
+
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <slot />
+
+  <script>
+    import '~/lib/enhance';
+  </script>
+</body>
+</html>

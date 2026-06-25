@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Design Explorations — Shishir Sabbir Portfolio</title>
+<style>
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+:root{ --bg:#0a0f1a; --surface:#111a2b; --text:#e7eef7; --muted:#8294ad; --line:#1d2c44; --accent:#5ea3d8; --accent-2:#7cc0ff;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace; --sans:"Segoe UI",system-ui,sans-serif; }
+body{ font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh;
+  background-image:radial-gradient(1000px 500px at 80% -10%,#15294d,transparent 60%),radial-gradient(800px 400px at 0% 110%,#1a1340,transparent 60%); }
+a{ color:inherit; text-decoration:none; }
+.wrap{ max-width:80rem; margin-inline:auto; padding:clamp(2rem,6vw,5rem) clamp(1.2rem,5vw,3rem); }
+header{ margin-bottom:3.5rem; }
+.tag{ font-family:var(--mono); font-size:.8rem; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; display:inline-flex; gap:.6rem; align-items:center; margin-bottom:1.2rem; }
+.tag::before{ content:""; width:34px; height:1px; background:var(--accent); }
+h1{ font-size:clamp(2.2rem,1.4rem + 3.5vw,4rem); letter-spacing:-.03em; line-height:1.05; margin-bottom:1rem; font-weight:800; }
+h1 .g{ background:linear-gradient(110deg,var(--accent-2),var(--accent)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+header p{ color:var(--muted); max-width:62ch; font-size:1.1rem; }
+header .meta{ font-family:var(--mono); font-size:.8rem; color:var(--muted); margin-top:1.2rem; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:1.6rem; }
+.card{ border:1px solid var(--line); border-radius:18px; overflow:hidden; background:var(--surface);
+  transition:transform .4s cubic-bezier(.22,1,.36,1),border-color .4s,box-shadow .4s; display:flex; flex-direction:column; }
+.card:hover{ transform:translateY(-8px); border-color:var(--accent); box-shadow:0 30px 60px -30px var(--accent); }
+.card__preview{ aspect-ratio:16/10; position:relative; overflow:hidden; border-bottom:1px solid var(--line); }
+.card__body{ padding:1.5rem; display:flex; flex-direction:column; gap:.8rem; flex:1; }
+.card__name{ font-size:1.5rem; font-weight:800; letter-spacing:-.02em; display:flex; align-items:center; gap:.6rem; }
+.card__name .num{ font-family:var(--mono); font-size:.85rem; color:var(--accent); }
+.card__name .pin{ margin-left:auto; font-family:var(--mono); font-size:.65rem; padding:.2rem .55rem; border-radius:100px; border:1px solid var(--line); color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.card__desc{ color:var(--muted); font-size:.92rem; flex:1; }
+.card__feats{ display:flex; flex-wrap:wrap; gap:.4rem; }
+.feat{ font-family:var(--mono); font-size:.7rem; padding:.25rem .6rem; border-radius:6px; border:1px solid var(--line); color:var(--muted); }
+.card__open{ margin-top:.5rem; display:inline-flex; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.85rem; color:var(--accent); transition:gap .3s; }
+.card:hover .card__open{ gap:1rem; }
+
+/* ---- mini animated previews ---- */
+.pv{ position:absolute; inset:0; display:grid; place-items:center; }
+
+.pv-aurora{ background:radial-gradient(120% 120% at 20% 10%,#eaf3fc,#f5f9fd 50%,#fff); }
+.pv-aurora::before{ content:""; position:absolute; width:60%; aspect-ratio:1; border-radius:50%; filter:blur(40px); opacity:.6;
+  background:conic-gradient(from 0deg,#5ea3d8,transparent 40%,#7cc0ff 70%,transparent); animation:spin 8s linear infinite; }
+.pv-aurora .t{ position:relative; font-size:2.4rem; font-weight:800; letter-spacing:-.03em; color:#16202e; z-index:1; }
+.pv-aurora .t b{ background:linear-gradient(110deg,#5ea3d8,#2467a6); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+
+.pv-nebula{ background:#060a14; }
+.pv-nebula::before{ content:""; position:absolute; inset:-50%; background-image:linear-gradient(#16223a 1px,transparent 1px),linear-gradient(90deg,#16223a 1px,transparent 1px); background-size:34px 34px; -webkit-mask:radial-gradient(circle at 50% 50%,#000,transparent 70%); mask:radial-gradient(circle at 50% 50%,#000,transparent 70%); animation:gridmove 4s linear infinite; }
+.pv-nebula .t{ position:relative; font-family:var(--mono); font-size:1.6rem; font-weight:700; color:#dbe6f5; z-index:1; text-shadow:0 0 20px #4db8ff; }
+.pv-nebula .t b{ color:#4db8ff; }
+.pv-nebula .t .car{ display:inline-block; width:.5ch; height:1em; background:#3ee08a; vertical-align:-2px; animation:blink 1s steps(1) infinite; }
+
+.pv-kinetic{ background:#f3efe7; overflow:hidden; }
+.pv-kinetic .t{ font-size:3rem; font-weight:900; text-transform:uppercase; letter-spacing:-.05em; color:#0e0e0c; line-height:.85; text-align:center; }
+.pv-kinetic .t .o{ color:transparent; -webkit-text-stroke:1.5px #0e0e0c; }
+.pv-kinetic .t .a{ color:#2e7dc4; }
+.pv-kinetic .bar{ position:absolute; bottom:0; left:0; right:0; background:#0e0e0c; color:#f3efe7; font-family:var(--mono); font-size:.75rem; font-weight:700; text-transform:uppercase; white-space:nowrap; padding:.3rem 0; }
+.pv-kinetic .bar span{ display:inline-block; padding-left:100%; animation:scrollx 6s linear infinite; }
+
+.pv-prism{ background:#0d0a1f; overflow:hidden; }
+.pv-prism .bl{ position:absolute; border-radius:50%; filter:blur(28px); mix-blend-mode:screen; opacity:.65; animation:bfloat 7s ease-in-out infinite alternate; }
+.pv-prism .bl1{ width:55%; aspect-ratio:1; left:-10%; top:-15%; background:radial-gradient(circle,#ff5db1,transparent 65%); }
+.pv-prism .bl2{ width:50%; aspect-ratio:1; right:-8%; top:10%; background:radial-gradient(circle,#34d8ff,transparent 65%); animation-delay:-2s; }
+.pv-prism .bl3{ width:55%; aspect-ratio:1; left:25%; bottom:-25%; background:radial-gradient(circle,#c45dff,transparent 65%); animation-delay:-4s; }
+.pv-prism .t{ position:relative; z-index:1; font-size:2.4rem; font-weight:800; letter-spacing:-.03em; }
+.pv-prism .t b{ background:linear-gradient(100deg,#ff5db1,#ffd166,#3ee08a,#34d8ff,#c45dff); background-size:200% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:slideg 3s linear infinite; }
+
+.pv-slate{ background:#fbfbfa; }
+@media (prefers-color-scheme: dark){ .pv-slate{ background:#0e0e0d; } }
+.pv-slate .t{ font-size:2rem; font-weight:600; letter-spacing:-.03em; color:#111; text-align:center; line-height:1.1; }
+@media (prefers-color-scheme: dark){ .pv-slate .t{ color:#f2f2ee; } }
+.pv-slate .t em{ font-family:Georgia,serif; font-style:italic; font-weight:400; }
+.pv-slate .ln{ position:absolute; bottom:18%; left:50%; width:0; height:1px; background:#111; animation:lndraw 2.5s var(--e,cubic-bezier(.22,1,.36,1)) infinite alternate; }
+@media (prefers-color-scheme: dark){ .pv-slate .ln{ background:#f2f2ee; } }
+
+.pv-bento{ background:#0a0c10; padding:14%; }
+.pv-bento .bg{ display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:1fr; gap:7px; width:100%; height:100%; }
+.pv-bento i{ display:block; border-radius:8px; background:#161a22; border:1px solid #222834; animation:cellpop .5s var(--e,cubic-bezier(.22,1,.36,1)) backwards; }
+.pv-bento i:nth-child(1){ grid-column:span 2; grid-row:span 2; background:linear-gradient(135deg,#16243f,#161a22); animation-delay:.1s; }
+.pv-bento i:nth-child(2){ background:linear-gradient(135deg,#5ea3d8,#9b87f5); animation-delay:.2s; }
+.pv-bento i:nth-child(3){ animation-delay:.3s; }
+.pv-bento i:nth-child(4){ animation-delay:.4s; background:linear-gradient(135deg,#34d8ff33,#161a22); }
+.pv-bento i:nth-child(5){ grid-column:span 2; animation-delay:.5s; }
+
+@keyframes spin{ to{ transform:rotate(360deg); } }
+@keyframes gridmove{ to{ transform:translateY(34px); } }
+@keyframes blink{ 50%{ opacity:0; } }
+@keyframes scrollx{ to{ transform:translateX(-100%); } }
+@keyframes bfloat{ to{ transform:translate(15%,12%) scale(1.3); } }
+@keyframes slideg{ to{ background-position:200% 0; } }
+@keyframes lndraw{ from{ width:0; } to{ width:46%; } }
+@keyframes cellpop{ from{ opacity:0; transform:scale(.8); } }
+
+footer{ margin-top:4rem; padding-top:2rem; border-top:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+
+@media (prefers-reduced-motion: reduce){ *{ animation:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag">dev / designs</span>
+    <h1>Six <span class="g">design directions</span>,<br>one portfolio.</h1>
+    <p>Standalone HTML + advanced-CSS explorations for the Shishir Sabbir portfolio — each a full single-page layout with real content, the actual headshot, and heavy animation. Pick a direction (or mix elements) before scaffolding the Astro build.</p>
+    <p class="meta">// open each in the browser · data sourced from CONTENT.md &amp; ABOUT_ME.md · all honor prefers-reduced-motion</p>
+  </header>
+
+  <div class="grid">
+
+    <a class="card" href="aurora.html">
+      <div class="card__preview"><div class="pv pv-aurora"><div class="t">Shishir <b>Sabbir</b></div></div></div>
+      <div class="card__body">
+        <div class="card__name"><span class="num">01</span> Aurora <span class="pin">Light</span></div>
+        <p class="card__desc">The DESIGN.md art direction. Gradient mesh, glassmorphism, kinetic per-letter headline, scroll reveals, magnetic buttons, 3D-tilt project cards, count-up stats. Auto dark mode.</p>
+        <div class="card__feats"><span class="feat">Glassmorphism</span><span class="feat">Magnetic CTA</span><span class="feat">3D tilt</span></div>
+        <span class="card__open">Open aurora.html →</span>
+      </div>
+    </a>
+
+    <a class="card" href="nebula.html">
+      <div class="card__preview"><div class="pv pv-nebula"><div class="t">~/<b>shishirsabbir</b><span class="car"></span></div></div></div>
+      <div class="card__body">
+        <div class="card__name"><span class="num">02</span> Nebula <span class="pin">Dark</span></div>
+        <p class="card__desc">Dark &amp; technical — fits the automation edge. Animated grid + glow orbs, scanlines, glitch headline, live code window, neon accents, sticky scrollytelling projects.</p>
+        <div class="card__feats"><span class="feat">Terminal UI</span><span class="feat">Glitch text</span><span class="feat">Sticky scroll</span></div>
+        <span class="card__open">Open nebula.html →</span>
+      </div>
+    </a>
+
+    <a class="card" href="kinetic.html">
+      <div class="card__preview"><div class="pv pv-kinetic"><div class="t">Shishir<br><span class="o">Sabbir</span><br><span class="a">Builder.</span></div><div class="bar"><span>AUTOMATION ● SCRAPING ● SHOPIFY ● FULL-STACK ● </span></div></div></div>
+      <div class="card__body">
+        <div class="card__name"><span class="num">03</span> Kinetic <span class="pin">Bold</span></div>
+        <p class="card__desc">Editorial / Swiss-brutalist. Oversized uppercase type, paper texture, outlined display numerals, dual marquees, hover-invert skill rows, high-contrast statement layout.</p>
+        <div class="card__feats"><span class="feat">Oversized type</span><span class="feat">Marquees</span><span class="feat">Brutalist</span></div>
+        <span class="card__open">Open kinetic.html →</span>
+      </div>
+    </a>
+
+    <a class="card" href="prism.html">
+      <div class="card__preview"><div class="pv pv-prism"><span class="bl bl1"></span><span class="bl bl2"></span><span class="bl bl3"></span><div class="t" style="color:#f4f1ff">Shishir <b>Sabbir</b></div></div></div>
+      <div class="card__body">
+        <div class="card__name"><span class="num">04</span> Prism <span class="pin">Colorful</span></div>
+        <p class="card__desc">Maximally colorful. Animated multi-color blobs, conic rainbow hero ring, sliding gradient text, per-category color-coded skills &amp; projects, hue-shifting accents.</p>
+        <div class="card__feats"><span class="feat">Rainbow gradients</span><span class="feat">Color blobs</span><span class="feat">Hue shift</span></div>
+        <span class="card__open">Open prism.html →</span>
+      </div>
+    </a>
+
+    <a class="card" href="slate.html">
+      <div class="card__preview"><div class="pv pv-slate"><div class="t">Shishir Sabbir,<br><em>builder.</em></div><span class="ln"></span></div></div>
+      <div class="card__body">
+        <div class="card__name"><span class="num">05</span> Slate <span class="pin">Minimal</span></div>
+        <p class="card__desc">Ultra-minimal monochrome editorial. Lots of whitespace, serif italic accents, numbered sections, line-draw link underlines, top scroll progress, restrained motion. Auto dark mode.</p>
+        <div class="card__feats"><span class="feat">Monochrome</span><span class="feat">Editorial</span><span class="feat">Restrained</span></div>
+        <span class="card__open">Open slate.html →</span>
+      </div>
+    </a>
+
+    <a class="card" href="bento.html">
+      <div class="card__preview"><div class="pv pv-bento"><div class="bg"><i></i><i></i><i></i><i></i><i></i></div></div></div>
+      <div class="card__body">
+        <div class="card__name"><span class="num">06</span> Bento <span class="pin">Modular</span></div>
+        <p class="card__desc">Modern modular bento grid — every section is a grid of cells, each its own animated module (rotating ring, marquee, stat counters). Staggered cell reveals, pointer-follow glow.</p>
+        <div class="card__feats"><span class="feat">Bento grid</span><span class="feat">Modular cells</span><span class="feat">Stagger reveal</span></div>
+        <span class="card__open">Open bento.html →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <span>Shishir Sabbir — Portfolio design explorations</span>
+    <span>6 directions · pick one or mix</span>
+  </footer>
+</div>
+</body>
+</html>

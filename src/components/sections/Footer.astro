@@ -1,0 +1,19 @@
+---
+import { profile } from '~/data/profile';
+const year = new Date().getFullYear();
+---
+<footer>
+  <span>© {year} {profile.name} — built from scratch with Astro &amp; advanced CSS.</span>
+  <a href="#top" class="totop">back to top ↑</a>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line); padding: var(--space-4) var(--gutter);
+    color: var(--muted); font-family: var(--mono); font-size: var(--s--1);
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    max-width: var(--maxw); margin-inline: auto;
+  }
+  .totop { transition: color .3s; }
+  .totop:hover { color: var(--accent); }
+</style>
