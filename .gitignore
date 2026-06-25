@@ -24,3 +24,12 @@ Thumbs.db
 
 # design scratch — react-icons build harness (no runtime use)
 dev/packages/
+
+# AI assistant & internal docs — keep local, don't publish
+CLAUDE.md
+.claude/
+ABOUT_ME.md
+CONTENT.md
+DEPLOY.md
+DESIGN.md
+PLAN.md
