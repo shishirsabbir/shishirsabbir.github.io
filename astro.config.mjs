@@ -1,11 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// Deploy target: user/org site repo `shishirsabbir.github.io` → served at the root, so base = '/'.
-// If you instead use a PROJECT repo (e.g. `portfolio`), set base: '/portfolio/' and keep `site`.
+// Deploy target: PROJECT repo `portfolio_page` → served at https://shishirsabbir.github.io/portfolio_page/
+// (For a user/org site repo `shishirsabbir.github.io` you'd drop `base` so it serves from the root.)
 export default defineConfig({
   site: 'https://shishirsabbir.github.io',
-  // base: '/portfolio/',   // ← uncomment ONLY for a project repo
+  base: '/portfolio_page/',
   output: 'static',
   trailingSlash: 'ignore',
   prefetch: true,
