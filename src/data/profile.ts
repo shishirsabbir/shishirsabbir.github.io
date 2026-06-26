@@ -4,7 +4,6 @@ export interface Profile {
   role: string;
   location: string;
   email: string;
-  phone: string;
   available: string;
   tagline: string;         // hero sub (HTML-safe plain text; bold spans handled in markup)
   resume: string;          // path under BASE_URL
@@ -16,7 +15,6 @@ export const profile: Profile = {
   role: 'Full-Stack Developer',
   location: 'Rajshahi, Bangladesh',
   email: 'shishir.sabbir@gmail.com',
-  phone: '+880 1883 061280',
   available: 'Available for freelance',
   tagline:
     'Full-stack developer with an edge in extreme web automation & scraping. I build complete products — Fastify/Next.js monorepos, Shopify pipelines, and self-hosted platforms on bare VPS.',
