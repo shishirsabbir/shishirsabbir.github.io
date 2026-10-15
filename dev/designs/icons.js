@@ -130,7 +130,7 @@ window.__ICON_DATA_OK__=true;
     else if(href.indexOf("mailto:")===0 || t.indexOf("@")>-1 || t==="email") key="mail";
     else if(href.indexOf("github")>-1 || t.indexOf("github")>-1) key="github";
     else if(href.indexOf("tel:")===0 || /^\+|\bphone\b/.test(t)) key="phone";
-    else if(a.hasAttribute("download") || t.indexOf("resume")>-1 || t.indexOf("pdf")>-1 || t.indexOf("download")>-1 || t.indexOf("résumé")>-1) key="download";
+    else if(a.hasAttribute("download") || t.indexOf("pdf")>-1 || t.indexOf("download")>-1) key="download";
     if(key){ stripArrows(a); prepend(a, key, "soc-ico", 1); a.dataset.iconDone="1"; }
   });
 

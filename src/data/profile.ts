@@ -6,7 +6,6 @@ export interface Profile {
   email: string;
   available: string;
   tagline: string;         // hero sub (HTML-safe plain text; bold spans handled in markup)
-  resume: string;          // path under BASE_URL
 }
 
 export const profile: Profile = {
@@ -18,7 +17,6 @@ export const profile: Profile = {
   available: 'Available for freelance',
   tagline:
     'Full-stack developer with an edge in extreme web automation & scraping. I build complete products — Fastify/Next.js monorepos, Shopify pipelines, and self-hosted platforms on bare VPS.',
-  resume: 'resume.pdf',
 };
 
 /** Quick stats for the animated counters. */

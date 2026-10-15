@@ -2,7 +2,6 @@
 import Icon from '~/components/ui/Icon.astro';
 import { profile } from '~/data/profile';
 import { socials } from '~/data/socials';
-const base = import.meta.env.BASE_URL;
 ---
 <section id="contact" class="contact">
   <div class="container">
@@ -11,7 +10,6 @@ const base = import.meta.env.BASE_URL;
 
     <div class="contact__cta reveal" data-d="2">
       <a class="btn btn--primary" href={`mailto:${profile.email}`}>./connect <span aria-hidden="true">→</span></a>
-      <a class="btn btn--ghost" href={`${base}${profile.resume}`} download>resume.pdf <Icon name="download" size={0.9} /></a>
     </div>
 
     <div class="socials reveal" data-d="3">
