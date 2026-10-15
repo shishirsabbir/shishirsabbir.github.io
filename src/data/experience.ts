@@ -15,9 +15,4 @@ export const experience: Experience[] = [
     title: 'Web Developer · Early career',
     body: 'From C/Python fundamentals into professional web dev; first backends (FastAPI + SQLAlchemy, Express + MongoDB).',
   },
-  {
-    when: 'in progress',
-    title: 'B.Sc. Computer Science — Hebei University of Science & Technology',
-    body: 'Thesis: deep-learning weld-pool penetration sensing via biprism stereo vision — DE-Net edge-aware CNNs, disparity optimization, 3D feature extraction for weld-quality classification.',
-  },
 ];
